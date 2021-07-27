@@ -1,65 +1,27 @@
 import React, {useEffect, useReducer} from 'react'
-import {UserType} from "../features/Users/users-reducer";
 import {usersApi} from "../api/social-network-api";
 import {Container} from '@material-ui/core';
 import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
+import {getUsersAC, stateForUsersStories, usersStoriesReducer} from "./stories-users-reducer";
 
 export default {
-    title: 'Social_Network/Users_Component'
+    title: 'Social_Network/Get_Users'
 }
 
-const initialState: InitialStateType = {
-    items: [],
-    totalCount: null,
-    pageSize: 50,
-    error: null
 
-}
 
-const reducer = (state:InitialStateType, action: ActionTypes) => {
-    switch (action.type){
-        case "SET_USERS":
-            return {...state,
-            items: action.users,
-            totalCount: action.totalCount,
-            error: action.error
-        }
-        default:
-            return state
-    }
-}
+export const GetUsers = () => {
 
-/* Action creators */
-export const setUsersAC = (users: UserType[], totalCount: number, error: string | null) => ({
-    type: "SET_USERS",
-    users,
-    totalCount,
-    error
-} as const)
-
-/* Types */
-export type InitialStateType = {
-    items: UserType[]
-    totalCount: number | null
-    pageSize: number
-    error: string | null
-}
-
-export type ActionTypes =
-    ReturnType<typeof setUsersAC>
-
-export const Users = () => {
-
-    const [state, dispatch] = useReducer(reducer, initialState)
+    const [state, dispatch] = useReducer(usersStoriesReducer, stateForUsersStories)
 
 
     useEffect(() => {
         usersApi.getUsers()
             .then(res => {
-                dispatch(setUsersAC(res.data.items, res.data.totalCount, res.data.error))
+                dispatch(getUsersAC(res.data.items, res.data.totalCount, res.data.error))
             })
     }, [])
 

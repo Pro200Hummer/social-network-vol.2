@@ -1,14 +1,14 @@
 import {AppThunkType} from "../../app/store";
 import {usersApi} from "../../api/social-network-api";
 
-export const initialState: UsersReducerInitialStateType = {
+export const usersInitialState: UsersReducerInitialStateType = {
     users: [],
     totalUsersCount: null,
     error: null
 
 }
 
-export const usersReducer = (state = initialState, action: UsersReducerActionType):
+export const usersReducer = (state = usersInitialState, action: UsersReducerActionType):
     UsersReducerInitialStateType => {
     switch (action.type) {
         case "SET_USERS":
