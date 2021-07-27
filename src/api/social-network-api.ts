@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {UserType} from "../features/Users/users-reducer";
 
 /* Instance with query settings */
 export const instance = axios.create({
@@ -34,14 +35,20 @@ export const followingApi = {
     }
 }
 
-/*export const usersApi = {
-    getUsers(count: number, page: number){
-        return instance.get(`users`)
+export const usersApi = {
+    getUsers(currentPage: number = 50, pageSize: number = 50){
+        return instance.get<UsersResponseType>(`users?page=${currentPage}&count=${pageSize}`)
     }
-}*/
+}
 
 
 /* Types */
+export type UsersResponseType = {
+    items:UserType[]
+    totalCount: number
+    error: null | string
+}
+
 export type MeResponseDataType = {
     id: number
     email: string
