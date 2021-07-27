@@ -36,7 +36,7 @@ export const followingApi = {
 }
 
 export const usersApi = {
-    getUsers(currentPage: number = 50, pageSize: number = 50){
+    getUsers(currentPage: number = 1, pageSize: number = 50){
         return instance.get<UsersResponseType>(`users?page=${currentPage}&count=${pageSize}`)
     }
 }

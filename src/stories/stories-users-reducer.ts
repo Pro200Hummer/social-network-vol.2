@@ -1,7 +1,9 @@
+
 export const stateForUsersStories: UsersStoriesInitialStateType = {
     items: [],
-    totalCount: null,
-    pageSize: 50,
+    totalCount: 0,
+    pageSize: 100,
+    currentPage: 10,
     error: null
 
 }
@@ -14,6 +16,8 @@ export const usersStoriesReducer = (state:UsersStoriesInitialStateType, action: 
                 totalCount: action.totalCount,
                 error: action.error
             }
+        case "CHANGE_CURRENT_PAGE":
+            return {...state, currentPage: action.currentPage}
         default:
             return state
     }
@@ -26,14 +30,17 @@ export const getUsersAC = (users: UserType[], totalCount: number, error: string 
     totalCount,
     error
 } as const)
+export const changeCurrentPageAC = (currentPage: number) => ({type:"CHANGE_CURRENT_PAGE", currentPage} as const)
 
 /* Types */
-type UsersStoriesInitialStateType = {
+export type UsersStoriesInitialStateType = {
     items: UserType[]
-    totalCount: number | null
+    totalCount: number
     pageSize: number
+    currentPage: number
     error: string | null
 }
 
 type UsersStoriesActionTypes =
-    ReturnType<typeof getUsersAC>;
+    | ReturnType<typeof getUsersAC>
+    | ReturnType<typeof changeCurrentPageAC>

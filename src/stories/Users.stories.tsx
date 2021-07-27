@@ -5,29 +5,48 @@ import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import {getUsersAC, stateForUsersStories, usersStoriesReducer} from "./stories-users-reducer";
+import {
+    changeCurrentPageAC,
+    getUsersAC,
+    stateForUsersStories,
+    usersStoriesReducer
+} from "./stories-users-reducer";
+import {Pagination} from "@material-ui/lab";
 
 export default {
-    title: 'Social_Network/Get_Users'
+    title: 'Social_Network/Users_Component'
 }
-
 
 
 export const GetUsers = () => {
 
     const [state, dispatch] = useReducer(usersStoriesReducer, stateForUsersStories)
 
+    const pages = Math.ceil(state.totalCount / state.pageSize)
 
     useEffect(() => {
-        usersApi.getUsers()
+        usersApi.getUsers(state.currentPage, state.pageSize)
             .then(res => {
                 dispatch(getUsersAC(res.data.items, res.data.totalCount, res.data.error))
             })
     }, [])
 
+    const changePageNumber = (page: number) => {
+        dispatch(changeCurrentPageAC(page))
+        usersApi.getUsers(page, state.pageSize)
+            .then(res => {
+                dispatch(getUsersAC(res.data.items, res.data.totalCount, res.data.error))
+            })
+    }
+
     return (
         <div>
             <Container maxWidth="sm">
+                <Pagination
+                    count={ pages }
+                    color="primary"
+                    onChange={ (e, page) => changePageNumber(page) }
+                />
                 { state.items.map(u => {
                     return <Box component="div" key={ u.id }>
                         <Grid container spacing={ 2 }>
