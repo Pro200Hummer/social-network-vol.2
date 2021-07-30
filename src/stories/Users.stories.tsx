@@ -1,14 +1,14 @@
-import React, {useEffect, useReducer} from 'react'
-import {usersApi} from "../api/social-network-api";
+import React, {useCallback, useEffect, useReducer} from 'react'
+import {followingApi, usersApi} from "../api/social-network-api";
 import {Container} from '@material-ui/core';
 import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import {
-    changeCurrentPageAC,
+    changeCurrentPageAC, followAC,
     getUsersAC,
-    stateForUsersStories,
+    stateForUsersStories, toggleFollowingAC, unfollowAC,
     usersStoriesReducer
 } from "./stories-users-reducer";
 import {Pagination} from "@material-ui/lab";
@@ -22,22 +22,40 @@ export const GetUsers = () => {
 
     const [state, dispatch] = useReducer(usersStoriesReducer, stateForUsersStories)
 
-    const pages = Math.ceil(state.totalCount / state.pageSize)
-
     useEffect(() => {
         usersApi.getUsers(state.currentPage, state.pageSize)
             .then(res => {
                 dispatch(getUsersAC(res.data.items, res.data.totalCount, res.data.error))
             })
-    }, [])
+    }, [state.currentPage])
 
-    const changePageNumber = (page: number) => {
+    const pages = Math.ceil(state.totalCount / state.pageSize)
+
+    const changePageNumber = useCallback((page: number) => {
         dispatch(changeCurrentPageAC(page))
-        usersApi.getUsers(page, state.pageSize)
-            .then(res => {
-                dispatch(getUsersAC(res.data.items, res.data.totalCount, res.data.error))
-            })
-    }
+    }, [dispatch])
+
+    const changeFollowingStatus = useCallback((trigger: string | undefined, userID: number) => {
+        if(trigger === "unfollow"){
+            dispatch(toggleFollowingAC(true, userID))
+            followingApi.unfollow(userID)
+                .then(res => {
+                    if(res.data.resultCode === 0){
+                        dispatch(unfollowAC(userID))
+                    }
+                    dispatch(toggleFollowingAC(false, userID))
+                })
+        }else if(trigger === "follow"){
+            dispatch(toggleFollowingAC(true, userID))
+            followingApi.follow(userID)
+                .then(res => {
+                    if(res.data.resultCode === 0){
+                        dispatch(followAC(userID))
+                    }
+                    dispatch(toggleFollowingAC(false, userID))
+                })
+        }
+    }, [dispatch])
 
     return (
         <div>
@@ -48,6 +66,28 @@ export const GetUsers = () => {
                     onChange={ (e, page) => changePageNumber(page) }
                 />
                 { state.items.map(u => {
+                    const button = u.followed ?
+                        <Button
+                            variant="outlined"
+                            color="primary"
+                            size="small"
+                            data-following="unfollow"
+                            disabled={state.followingProgress.some(id => id === u.id)}
+                            onClick={e => changeFollowingStatus(e.currentTarget.dataset.following, u.id)}
+                        >
+                            Unfollow
+                        </Button> :
+                        <Button
+                            variant="outlined"
+                            color="primary"
+                            size="small"
+                            data-following="follow"
+                            disabled={state.followingProgress.some(id => id === u.id)}
+                            onClick={e => changeFollowingStatus(e.currentTarget.dataset.following, u.id)}
+                        >
+                            Follow
+                        </Button>
+
                     return <Box component="div" key={ u.id }>
                         <Grid container spacing={ 2 }>
                             <Grid item>
@@ -62,9 +102,7 @@ export const GetUsers = () => {
                                         { u.status }
                                     </Grid>
                                     <Grid item xs>
-                                        <Button variant="outlined" color="primary" size="small">
-                                            Follow
-                                        </Button>
+                                        { button }
                                     </Grid>
                                 </Grid>
                             </Grid>
