@@ -7,10 +7,9 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import {
     changeCurrentPageAC, followAC,
-    getUsersAC,
-    stateForUsersStories, toggleFollowingAC, unfollowAC,
+    getUsersAC, stateForUsersReducer, toggleFollowingAC, unfollowAC,
     usersStoriesReducer
-} from "./stories-users-reducer";
+} from "./stories-reducers/stories-users-reducer";
 import {Pagination} from "@material-ui/lab";
 
 export default {
@@ -20,7 +19,7 @@ export default {
 
 export const GetUsers = () => {
 
-    const [state, dispatch] = useReducer(usersStoriesReducer, stateForUsersStories)
+    const [state, dispatch] = useReducer(usersStoriesReducer, stateForUsersReducer)
 
     useEffect(() => {
         usersApi.getUsers(state.currentPage, state.pageSize)

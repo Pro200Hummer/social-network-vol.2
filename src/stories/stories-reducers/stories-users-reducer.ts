@@ -1,6 +1,6 @@
-import {UserType} from "../features/Users/users-reducer";
+import {UserType} from "../../features/Users/users-reducer";
 
-export const stateForUsersStories: UsersStoriesInitialStateType = {
+export const stateForUsersReducer: UsersStoriesInitialStateType = {
     items: [],
     totalCount: 0,
     pageSize: 100,
@@ -10,7 +10,7 @@ export const stateForUsersStories: UsersStoriesInitialStateType = {
 
 }
 
-export const usersStoriesReducer = (state: UsersStoriesInitialStateType, action: UsersStoriesActionTypes) => {
+export const usersStoriesReducer = (state = stateForUsersReducer, action: UsersStoriesActionTypes) => {
     switch (action.type) {
         case "SET_USERS":
             return {
