@@ -26,7 +26,6 @@ export const ProgressComponent = () => {
     }
 
     const setErrorMessage = () => {
-        debugger
         dispatch(setErrorMessageAC("Wow! This is new error"))
     }
 
@@ -78,7 +77,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const ErrorMessageComponent = (props: ErrorMessageComponentPropsType) => {
-    debugger
     const classes = useStyles();
 
     const handleClose = (event?: React.SyntheticEvent, reason?: string) => {

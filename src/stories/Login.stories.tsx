@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useReducer} from 'react'
 import {
     Button,
     Checkbox,
@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core";
 import {useFormik} from "formik";
 import {authApi, LoginRequestType} from "../api/social-network-api";
+import {setIsLoggedInAC, stateForAuthReducer, storiesAuthReducer} from "./stories-reducers/stories-auth-reducer";
 
 export default {
     title: 'Social_Network/Login_Component'
@@ -33,7 +34,9 @@ const validate = (values: LoginRequestType) => {
     return errors;
 };
 
-export const Login = () => {
+export const LoginComponent = () => {
+
+    const[state, dispatch] = useReducer(storiesAuthReducer, stateForAuthReducer)
 
     const formik = useFormik<LoginRequestType>({
         initialValues: {
@@ -46,9 +49,8 @@ export const Login = () => {
             authApi.login(values)
                 .then(res => {
                     if(res.data.resultCode === 0){
-                        alert("Success")
-                    }
-                    if(res.data.resultCode === 1){
+                        dispatch(setIsLoggedInAC(true))
+                    }else{
                         alert(res.data.messages[0])
                     }
                 })

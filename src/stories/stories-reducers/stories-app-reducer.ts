@@ -6,7 +6,6 @@ export const stateForAppReducer: AppReducerStoriesStateType = {
 
 export const appStoriesReducer =
     (state = stateForAppReducer, action: AppStoriesReducerActionsType) => {
-    debugger
         switch (action.type) {
             case "APP/SET_STATUS":
                 return {...state, status: action.status}
