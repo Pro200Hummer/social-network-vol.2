@@ -1,55 +1,109 @@
 import {AppThunkType} from "../../app/store";
-import {usersApi} from "../../api/social-network-api";
+import {followingApi, usersApi} from "../../api/social-network-api";
 
-export const usersInitialState: UsersReducerInitialStateType = {
-    users: [],
-    totalUsersCount: null,
+export const usersReducerInitialState: UsersReducerInitialStateType = {
+    items: [],
+    totalCount: 0,
+    pageSize: 100,
+    currentPage: 1,
+    followingProgress: [],
     error: null
 
 }
 
-export const usersReducer = (state = usersInitialState, action: UsersReducerActionType):
-    UsersReducerInitialStateType => {
+export const usersReducer =
+    (state = usersReducerInitialState, action: UsersReducerActionTypes) => {
     switch (action.type) {
-        case "SET_USERS":
-            return {...state,
-                users: action.users,
-                totalUsersCount: action.totalCount,
+        case "USERS/SET_USERS":
+            return {
+                ...state,
+                items: action.users,
+                totalCount: action.totalCount,
                 error: action.error
+            }
+        case "USERS/CHANGE_CURRENT_PAGE":
+            return {...state, currentPage: action.currentPage}
+        case "USERS/FOLLOW":
+            return {
+                ...state,
+                items: state.items.map(u => {
+                    if(u.id === action.userID){
+                        return {...u, followed: !u.followed}
+                    }else{
+                        return u
+                    }
+                })
+            }
+        case "USERS/UNFOLLOW":
+            return {
+                ...state,
+                items: state.items.map(u => {
+                    if(u.id === action.userID){
+                        return {...u, followed: !u.followed}
+                    }else{
+                        return u
+                    }
+                })
+            }
+        case "USERS/TOGGLE_FOLLOWING":
+            return {
+                ...state,
+                followingProgress: action.isFollowing ?
+                    [...state.followingProgress, action.userID ]:
+                    state.followingProgress.filter(id => id !== action.userID)
             }
         default:
             return state
     }
-}
+};
 
-/* Actions */
-export const setUsersAC = (users: UserType[], totalCount: number, error: string | null) => ({
-    type: "SET_USERS",
+/* Action creators */
+export const getUsers = (users: UserType[], totalCount: number, error: string | null) => ({
+    type: "USERS/SET_USERS",
     users,
     totalCount,
     error
 } as const)
+export const changeCurrentPage = (currentPage: number) => ({type: "USERS/CHANGE_CURRENT_PAGE", currentPage} as const)
+export const follow = (userID: number) => ({type: "USERS/FOLLOW", userID} as const)
+export const unfollow = (userID: number) => ({type: "USERS/UNFOLLOW", userID} as const)
+export const toggleFollowing = (isFollowing: boolean, userID: number) =>
+    ({type: "USERS/TOGGLE_FOLLOWING",isFollowing, userID} as const)
 
-/* Thunks */
-export const setUsersTC = (): AppThunkType => async dispatch => {
-    try {
-        const res = await usersApi.getUsers()
-        dispatch(setUsersAC(res.data.items, res.data.totalCount, res.data.error))
-    } catch (error) {
-
-    }
+/* Thunk */
+export const getUsersTC = (currentPage: number, pageSize: number):AppThunkType => dispatch => {
+    usersApi.getUsers(currentPage, pageSize)
+        .then(res => {
+            dispatch(getUsers(res.data.items, res.data.totalCount, res.data.error))
+        })
 }
 
+export const followTC = (userID: number):AppThunkType => dispatch => {
+    dispatch(toggleFollowing(true, userID))
+    followingApi.unfollow(userID)
+        .then(res => {
+            if(res.data.resultCode === 0){
+                dispatch(unfollow(userID))
+            }
+            dispatch(toggleFollowing(false, userID))
+        })
+}
+
+export const unfollowTC = (userID: number):AppThunkType => dispatch => {
+    dispatch(toggleFollowing(true, userID))
+    followingApi.follow(userID)
+        .then(res => {
+            if(res.data.resultCode === 0){
+                dispatch(follow(userID))
+            }
+            dispatch(toggleFollowing(false, userID))
+        })
+}
 
 /* Types */
-export type UsersReducerInitialStateType = {
-    users: UserType[]
-    totalUsersCount: number | null
-    error: string | null
-}
 export type UserType = {
     id: number
-    name: number
+    name: string
     status: string
     photos: {
         small: string
@@ -58,6 +112,19 @@ export type UserType = {
     followed: boolean
 }
 
-export type UsersReducerActionType =
-    ReturnType<typeof setUsersAC>
+export type UsersReducerInitialStateType = {
+    items: UserType[]
+    totalCount: number
+    pageSize: number
+    currentPage: number
+    followingProgress: number[]
+    error: string | null
+}
+
+export type UsersReducerActionTypes =
+    | ReturnType<typeof getUsers>
+    | ReturnType<typeof changeCurrentPage>
+    | ReturnType<typeof follow>
+    | ReturnType<typeof unfollow>
+    | ReturnType<typeof toggleFollowing>
 

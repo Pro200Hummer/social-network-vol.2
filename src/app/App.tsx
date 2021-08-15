@@ -1,12 +1,13 @@
 import React from 'react';
+import {UsersContainer} from "../features/Users/UsersContainer";
 
 
 export const App = () => {
 
     return (
-        <div>
-
-        </div>
+        <>
+            <UsersContainer/>
+        </>
     )
 }
 
