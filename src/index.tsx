@@ -1,15 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { Provider } from 'react-redux';
+import {Provider} from 'react-redux';
 import {store} from "./app/store";
 import {AppContainer} from "./app/AppContainer";
+import {BrowserRouter} from "react-router-dom";
 
 ReactDOM.render(
-      <Provider store={store}>
-          <AppContainer />
-      </Provider>,
-  document.getElementById('root')
+    <BrowserRouter>
+        <Provider store={ store }>
+            <AppContainer/>
+        </Provider>
+    </BrowserRouter>,
+    document.getElementById('root')
 );
 
 //If you want to start measuring performance in your app, pass a function

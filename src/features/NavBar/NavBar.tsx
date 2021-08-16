@@ -1,50 +1,13 @@
-import React from 'react'
-import {
-    AppBar,
-    Button, Drawer,
-    Grid,
-    IconButton, List, ListItem, ListItemIcon, ListItemText, makeStyles,
-    Toolbar,
-    Typography
-} from "@material-ui/core";
-import MenuIcon from '@material-ui/icons/Menu';
-import PersonIcon from '@material-ui/icons/Person';
-import MessageIcon from '@material-ui/icons/Message';
-import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
-import ReceiptIcon from '@material-ui/icons/Receipt';
-import MusicNoteIcon from '@material-ui/icons/MusicNote';
+import React, {useState} from 'react'
+import {Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, makeStyles} from "@material-ui/core";
+import PersonIcon from "@material-ui/icons/Person";
+import MessageIcon from "@material-ui/icons/Message";
+import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
+import ReceiptIcon from "@material-ui/icons/Receipt";
+import MusicNoteIcon from "@material-ui/icons/MusicNote";
+import MenuIcon from "@material-ui/icons/Menu";
+import {NavLink} from "react-router-dom";
 
-
-export default {
-    title: 'Social_Network/Header_Component'
-}
-
-
-export const StoriesHeader = () => {
-    return <AppBar position="static">
-        <Toolbar variant="dense">
-            <Grid container
-                  direction="row"
-                  justify="space-between"
-                  alignItems="center"
-            >
-                <Grid item xs={ 4 }>
-                    <StoriesNavBar/>
-                </Grid>
-                <Grid item xs={ 4 }>
-                    <Typography variant="h6" color="inherit">
-                        Social Network
-                    </Typography>
-                </Grid>
-                <Grid item xs={ 4 }>
-                    <Button variant="outlined" color="inherit">Login</Button>
-                </Grid>
-            </Grid>
-        </Toolbar>
-    </AppBar>
-}
-
-/* NavBar Component */
 const useStyles = makeStyles({
     list: {
         width: 250,
@@ -52,14 +15,17 @@ const useStyles = makeStyles({
     fullList: {
         width: 'auto',
     },
-
+    link: {
+        color: 'black',
+        textDecoration: 'none'
+    },
 });
 
 type Anchor = 'left';
 
-export const StoriesNavBar = () => {
+export const NavBar: React.FC = React.memo(() => {
     const classes = useStyles();
-    const [state, setState] = React.useState({
+    const [state, setState] = useState({
         left: false
 
     });
@@ -89,7 +55,7 @@ export const StoriesNavBar = () => {
             >
                 <List className={ classes.list }>
                     { listItems.map((text) => {
-                        const getIconItem = () => {
+                        const setIconItem = () => {
                             switch (text) {
                                 case "Profile":
                                     return <PersonIcon/>
@@ -101,16 +67,19 @@ export const StoriesNavBar = () => {
                                     return <ReceiptIcon/>
                                 case "Music":
                                     return <MusicNoteIcon/>
-                            }}
+                            }
+                        }
                         return (
-                            <ListItem button key={ text }>
-                                <ListItemIcon>
-                                    { getIconItem() }
-                                </ListItemIcon>
-                                <ListItemText primary={ text }/>
-                            </ListItem>
+                            <NavLink to={ `/${ text.toLowerCase() }` } className={ classes.link }>
+                                <ListItem button key={ text }>
+                                    <ListItemIcon>
+                                        { setIconItem() }
+                                    </ListItemIcon>
+                                    <ListItemText primary={ text }/>
+                                </ListItem>
+                            </NavLink>
                         )
-                    })}
+                    }) }
                 </List>
             </div>
         )
@@ -130,4 +99,4 @@ export const StoriesNavBar = () => {
             )) }
         </div>
     );
-}
+})

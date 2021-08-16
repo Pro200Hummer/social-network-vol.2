@@ -1,5 +1,6 @@
 import {AppThunkType} from "../../app/store";
 import {followingApi, usersApi} from "../../api/social-network-api";
+import {handlerServerAppError, handlerServerNetworkError} from "../../utils/app-utils";
 
 export const usersReducerInitialState: UsersReducerInitialStateType = {
     items: [],
@@ -76,6 +77,9 @@ export const getUsersTC = (currentPage: number, pageSize: number):AppThunkType =
         .then(res => {
             dispatch(getUsers(res.data.items, res.data.totalCount, res.data.error))
         })
+        .catch(error => {
+            handlerServerNetworkError(error, dispatch)
+        })
 }
 
 export const followTC = (userID: number):AppThunkType => dispatch => {
@@ -84,8 +88,13 @@ export const followTC = (userID: number):AppThunkType => dispatch => {
         .then(res => {
             if(res.data.resultCode === 0){
                 dispatch(unfollow(userID))
+            }else{
+                handlerServerAppError(res.data, dispatch)
             }
             dispatch(toggleFollowing(false, userID))
+        })
+        .catch(error => {
+            handlerServerNetworkError(error, dispatch)
         })
 }
 
@@ -95,8 +104,13 @@ export const unfollowTC = (userID: number):AppThunkType => dispatch => {
         .then(res => {
             if(res.data.resultCode === 0){
                 dispatch(follow(userID))
+            }else{
+                handlerServerAppError(res.data, dispatch)
             }
             dispatch(toggleFollowing(false, userID))
+        })
+        .catch(error => {
+            handlerServerNetworkError(error, dispatch)
         })
 }
 
