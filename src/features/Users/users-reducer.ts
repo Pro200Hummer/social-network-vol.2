@@ -1,6 +1,7 @@
 import {AppThunkType} from "../../app/store";
 import {followingApi, usersApi} from "../../api/social-network-api";
 import {handlerServerAppError, handlerServerNetworkError} from "../../utils/app-utils";
+import {setStatus} from "../../app/app-reducer";
 
 export const usersReducerInitialState: UsersReducerInitialStateType = {
     items: [],
@@ -73,9 +74,11 @@ export const toggleFollowing = (isFollowing: boolean, userID: number) =>
 
 /* Thunk */
 export const getUsersTC = (currentPage: number, pageSize: number):AppThunkType => dispatch => {
+    dispatch(setStatus("loading"))
     usersApi.getUsers(currentPage, pageSize)
         .then(res => {
             dispatch(getUsers(res.data.items, res.data.totalCount, res.data.error))
+            dispatch(setStatus("succeed"))
         })
         .catch(error => {
             handlerServerNetworkError(error, dispatch)
@@ -83,11 +86,13 @@ export const getUsersTC = (currentPage: number, pageSize: number):AppThunkType =
 }
 
 export const followTC = (userID: number):AppThunkType => dispatch => {
+    dispatch(setStatus("loading"))
     dispatch(toggleFollowing(true, userID))
     followingApi.unfollow(userID)
         .then(res => {
             if(res.data.resultCode === 0){
                 dispatch(unfollow(userID))
+                dispatch(setStatus("succeed"))
             }else{
                 handlerServerAppError(res.data, dispatch)
             }
@@ -99,11 +104,13 @@ export const followTC = (userID: number):AppThunkType => dispatch => {
 }
 
 export const unfollowTC = (userID: number):AppThunkType => dispatch => {
+    dispatch(setStatus("loading"))
     dispatch(toggleFollowing(true, userID))
     followingApi.follow(userID)
         .then(res => {
             if(res.data.resultCode === 0){
                 dispatch(follow(userID))
+                dispatch(setStatus("succeed"))
             }else{
                 handlerServerAppError(res.data, dispatch)
             }

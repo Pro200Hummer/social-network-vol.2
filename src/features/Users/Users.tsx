@@ -17,7 +17,7 @@ type UsersPropsType = {
 }
 
 export const Users: React.FC<UsersPropsType> = React.memo((props) => {
-    const{
+    const {
         users,
         pages,
         changePageNumber,
@@ -25,58 +25,56 @@ export const Users: React.FC<UsersPropsType> = React.memo((props) => {
     } = props
 
     return (
-        <>
-            <Container maxWidth="sm">
-                <Pagination
-                    count={ pages }
-                    color="primary"
-                    onChange={ (e, page) => changePageNumber(page) }
-                />
-                { users.items.map(u => {
-                    const button = u.followed ?
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            size="small"
-                            data-following="unfollow"
-                            disabled={users.followingProgress.some(id => id === u.id)}
-                            onClick={e => changeFollowingStatus(e.currentTarget.dataset.following, u.id)}
-                        >
-                            Unfollow
-                        </Button> :
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            size="small"
-                            data-following="follow"
-                            disabled={users.followingProgress.some(id => id === u.id)}
-                            onClick={e => changeFollowingStatus(e.currentTarget.dataset.following, u.id)}
-                        >
-                            Follow
-                        </Button>
+        <Container maxWidth="sm">
+            <Pagination
+                count={ pages }
+                color="primary"
+                onChange={ (e, page) => changePageNumber(page) }
+            />
+            { users.items.map(u => {
+                const button = u.followed ?
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        size="small"
+                        data-following="unfollow"
+                        disabled={ users.followingProgress.some(id => id === u.id) }
+                        onClick={ e => changeFollowingStatus(e.currentTarget.dataset.following, u.id) }
+                    >
+                        Unfollow
+                    </Button> :
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        size="small"
+                        data-following="follow"
+                        disabled={ users.followingProgress.some(id => id === u.id) }
+                        onClick={ e => changeFollowingStatus(e.currentTarget.dataset.following, u.id) }
+                    >
+                        Follow
+                    </Button>
 
-                    return <Box component="div" key={ u.id }>
-                        <Grid container spacing={ 2 }>
-                            <Grid item>
-                                <Avatar src={ u.photos.small }/>
-                            </Grid>
-                            <Grid item xs={ 12 } sm container>
-                                <Grid item xs direction="column" spacing={ 3 }>
-                                    <Grid item xs>
-                                        { u.name }
-                                    </Grid>
-                                    <Grid item xs>
-                                        { u.status }
-                                    </Grid>
-                                    <Grid item xs>
-                                        { button }
-                                    </Grid>
+                return <Box component="div" key={ u.id }>
+                    <Grid container spacing={ 2 }>
+                        <Grid item>
+                            <Avatar src={ u.photos.small }/>
+                        </Grid>
+                        <Grid item xs={ 12 } sm container>
+                            <Grid item xs direction="column" spacing={ 3 }>
+                                <Grid item xs>
+                                    { u.name }
+                                </Grid>
+                                <Grid item xs>
+                                    { u.status }
+                                </Grid>
+                                <Grid item xs>
+                                    { button }
                                 </Grid>
                             </Grid>
                         </Grid>
-                    </Box>
-                }) }
-            </Container>
-        </>
+                    </Grid>
+                </Box>
+            }) }
+        </Container>
     )
 });

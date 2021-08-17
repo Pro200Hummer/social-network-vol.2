@@ -2,9 +2,10 @@ import {AppThunkType} from "../../app/store";
 import {authApi, LoginRequestType} from "../../api/social-network-api";
 import {setIsLoggedInAC} from "../../stories/stories-reducers/stories-auth-reducer";
 import {handlerServerAppError, handlerServerNetworkError} from "../../utils/app-utils";
+import {setStatus} from "../../app/app-reducer";
 
 export const authReducerInitialState: AuthReducerInitialStateType = {
-    isLoggedIn: false
+    isLoggedIn: true
 }
 
 
@@ -23,6 +24,7 @@ export const setIsLoggedIn = (value: boolean) => ({type: "LOGIN/SET_IS_LOGGED_IN
 
 /* Thunk */
 export const loginTC = (values: LoginRequestType):AppThunkType => dispatch => {
+    dispatch(setStatus("loading"))
     authApi.login(values)
         .then(res => {
             if(res.data.resultCode === 0){
@@ -30,6 +32,7 @@ export const loginTC = (values: LoginRequestType):AppThunkType => dispatch => {
             }else{
                 handlerServerAppError(res.data, dispatch)
             }
+            dispatch(setStatus("succeed"))
         })
         .catch(error => {
             handlerServerNetworkError(error, dispatch)

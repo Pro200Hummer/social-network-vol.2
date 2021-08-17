@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, makeStyles} from "@material-ui/core";
+import {Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText} from "@material-ui/core";
 import PersonIcon from "@material-ui/icons/Person";
 import MessageIcon from "@material-ui/icons/Message";
 import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
@@ -7,19 +7,7 @@ import ReceiptIcon from "@material-ui/icons/Receipt";
 import MusicNoteIcon from "@material-ui/icons/MusicNote";
 import MenuIcon from "@material-ui/icons/Menu";
 import {NavLink} from "react-router-dom";
-
-const useStyles = makeStyles({
-    list: {
-        width: 250,
-    },
-    fullList: {
-        width: 'auto',
-    },
-    link: {
-        color: 'black',
-        textDecoration: 'none'
-    },
-});
+import {useStyles} from "../../utils/styles-util";
 
 type Anchor = 'left';
 

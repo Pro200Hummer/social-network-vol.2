@@ -1,6 +1,6 @@
 import {Dispatch} from "redux";
 import {ResponseType} from "../api/social-network-api";
-import {setErrorMessage} from "../app/app-reducer";
+import {setErrorMessage, setStatus} from "../app/app-reducer";
 
 
 export const handlerServerAppError = <D>(data: ResponseType<D>, dispatch: Dispatch) => {
@@ -9,8 +9,10 @@ export const handlerServerAppError = <D>(data: ResponseType<D>, dispatch: Dispat
     }else{
         dispatch(setErrorMessage("Some error occurred"))
     }
+    dispatch(setStatus("failed"))
 }
 
 export const handlerServerNetworkError = (errorMessage: string | null, dispatch: Dispatch) => {
     dispatch(setErrorMessage(errorMessage))
+    dispatch(setStatus("failed"))
 }

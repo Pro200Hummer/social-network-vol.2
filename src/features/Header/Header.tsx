@@ -1,11 +1,20 @@
 import React from 'react'
 import {NavBar} from "../NavBar/NavBar";
-import {AppBar, Button, Grid, Toolbar, Typography} from "@material-ui/core";
+import {AppBar, Button, Grid, LinearProgress, Toolbar, Typography} from "@material-ui/core";
+import {AppStatusType} from "../../app/app-reducer";
+import {useSelector} from "react-redux";
+import {AppRootStateType} from "../../app/store";
+import {useStyles} from "../../utils/styles-util";
+
 
 
 
 export const Header: React.FC = React.memo(() => {
-    return <AppBar position="static">
+
+    const classes = useStyles();
+    const preloaderStatus = useSelector<AppRootStateType, AppStatusType>(state => state.app.status)
+
+    return <AppBar position="static" className={classes.bar}>
         <Toolbar variant="dense">
             <Grid container
                   direction="row"
@@ -25,5 +34,6 @@ export const Header: React.FC = React.memo(() => {
                 </Grid>
             </Grid>
         </Toolbar>
+        {preloaderStatus === "loading" && <LinearProgress color="secondary" className={classes.preloader}/>}
     </AppBar>
 })
