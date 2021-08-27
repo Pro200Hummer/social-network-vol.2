@@ -1,22 +1,22 @@
-import React from 'react'
+import React, {FC, memo} from 'react'
 import {Container} from "@material-ui/core";
 import {Pagination} from "@material-ui/lab";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
-import {UsersReducerInitialStateType} from "./users-reducer";
+import {UsersInitialStateType} from "./users-reducer";
 
 
 type UsersPropsType = {
-    users: UsersReducerInitialStateType
+    users: UsersInitialStateType
     pages: number
     changePageNumber: (page: number) => void
     changeFollowingStatus: (trigger: string | undefined, userID: number) => void
 
 }
 
-export const Users: React.FC<UsersPropsType> = React.memo((props) => {
+export const Users: FC<UsersPropsType> = memo((props) => {
     const {
         users,
         pages,

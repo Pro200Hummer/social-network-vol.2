@@ -1,9 +1,9 @@
-import React, {FC} from 'react';
+import React, {FC, memo} from 'react';
 
-export const Profile: FC = () => {
+export const Profile: FC = memo(() => {
     return (
         <>
             <h1>Profile Component</h1>
         </>
     )
-}
+});

@@ -4,7 +4,7 @@ import {Routes} from "../features/Routes";
 import {ErrorSnackbar} from "../components/ErrorSnackbar/ErrorSnackbar";
 import {useDispatch} from "react-redux";
 import {useStyles} from "../utils/styles-util";
-import {isLoggedInTC} from "./app-reducer";
+import {isInitializeTC} from "./app-reducer";
 
 
 export const App = () => {
@@ -13,8 +13,8 @@ export const App = () => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(isLoggedInTC())
-    }, [])
+        dispatch(isInitializeTC())
+    }, [dispatch])
 
     return (
         <>

@@ -1,16 +1,22 @@
 import {AppThunkType} from "../../app/store";
 import {authApi, LoginRequestType} from "../../api/social-network-api";
-import {setIsLoggedInAC} from "../../stories/stories-reducers/stories-auth-reducer";
 import {handlerServerAppError, handlerServerNetworkError} from "../../utils/app-utils";
 import {setStatus} from "../../app/app-reducer";
 
-export const authReducerInitialState: AuthReducerInitialStateType = {
-    isLoggedIn: true
+export type AuthInitialStateType = {
+    isLoggedIn: boolean
 }
 
+export type AuthReducerActionsType =
+    |ReturnType<typeof setIsLoggedIn>
 
-export const authReducer =
-    (state = authReducerInitialState, action: AuthReducerActionsType) => {
+const InitialState: AuthInitialStateType = {
+    isLoggedIn: false
+}
+
+export const setIsLoggedIn = (value: boolean) => ({type: "LOGIN/SET_IS_LOGGED_IN", value} as const)
+
+export const authReducer = (state = InitialState, action: AuthReducerActionsType) => {
         switch (action.type){
             case "LOGIN/SET_IS_LOGGED_IN":
                 return {...state, isLoggedIn: action.value}
@@ -19,16 +25,12 @@ export const authReducer =
         }
     };
 
-/* Action creators */
-export const setIsLoggedIn = (value: boolean) => ({type: "LOGIN/SET_IS_LOGGED_IN", value} as const)
-
-/* Thunk */
 export const loginTC = (values: LoginRequestType):AppThunkType => dispatch => {
     dispatch(setStatus("loading"))
     authApi.login(values)
         .then(res => {
             if(res.data.resultCode === 0){
-                dispatch(setIsLoggedInAC(true))
+                dispatch(setIsLoggedIn(true))
             }else{
                 handlerServerAppError(res.data, dispatch)
             }
@@ -39,11 +41,3 @@ export const loginTC = (values: LoginRequestType):AppThunkType => dispatch => {
         })
 }
 
-
-/* Types */
-export type AuthReducerInitialStateType = {
-    isLoggedIn: boolean
-}
-
-export type AuthReducerActionsType =
-    |ReturnType<typeof setIsLoggedIn>

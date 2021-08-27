@@ -1,12 +1,12 @@
-import {appReducer, AppReducerInitialStateType, setAuthorize, setErrorMessage, setStatus} from "./app-reducer";
+import {appReducer, AppInitialStateType, setInitialize, setErrorMessage, setStatus} from "./app-reducer";
 
 
-let initialState: AppReducerInitialStateType
+let initialState: AppInitialStateType
 beforeEach(() => {
     initialState = {
         status: "idle",
         errorMessage: null,
-        isAuthorized: false
+        isInitialize: false
     }
 })
 
@@ -25,8 +25,8 @@ test("error message should be set", () => {
 })
 
 test("authorization check needs to be changed", () => {
-    const action = setAuthorize(true)
+    const action = setInitialize(true)
     const endState = appReducer(initialState, action)
 
-    expect(endState.isAuthorized).toBeTruthy()
+    expect(endState.isInitialize).toBeTruthy()
 })

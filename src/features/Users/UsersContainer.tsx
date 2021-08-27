@@ -1,19 +1,19 @@
-import React, {useCallback, useEffect} from 'react'
+import React, {FC, memo, useCallback, useEffect} from 'react'
 import {Users} from "./Users";
 import {useDispatch, useSelector} from "react-redux";
-import {changeCurrentPage, followTC, getUsersTC, unfollowTC, UsersReducerInitialStateType} from "./users-reducer";
+import {changeCurrentPage, followTC, getUsersTC, unfollowTC, UsersInitialStateType} from "./users-reducer";
 import {AppRootStateType} from "../../app/store";
 
 
-export const UsersContainer: React.FC = React.memo(() => {
+export const UsersContainer: FC = memo(() => {
 
-    const users = useSelector<AppRootStateType, UsersReducerInitialStateType>(state => state.users)
+    const users = useSelector<AppRootStateType, UsersInitialStateType>(state => state.users)
 
     const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(getUsersTC(users.currentPage, users.pageSize))
-    }, [users.currentPage])
+    },[dispatch, users.currentPage, users.pageSize])
 
     const pages = Math.ceil(users.totalCount / users.pageSize)
 

@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {FC, memo, useState} from 'react'
 import {Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText} from "@material-ui/core";
 import PersonIcon from "@material-ui/icons/Person";
 import MessageIcon from "@material-ui/icons/Message";
@@ -11,7 +11,7 @@ import {useStyles} from "../../utils/styles-util";
 
 type Anchor = 'left';
 
-export const NavBar: React.FC = React.memo(() => {
+export const NavBar: FC = memo(() => {
     const classes = useStyles();
     const [state, setState] = useState({
         left: false

@@ -1,5 +1,5 @@
 import {LoginRequestType} from "../../api/social-network-api";
-import React from "react";
+import React, {FC, memo} from "react";
 import {useFormik} from "formik";
 import {
     Button,
@@ -32,7 +32,7 @@ const validate = (values: LoginRequestType) => {
     return errors;
 };
 
-export const Auth: React.FC<AuthPropsType> = React.memo((props) => {
+export const Auth: FC<AuthPropsType> = memo((props) => {
 
     const {
         setLogin
@@ -56,8 +56,7 @@ export const Auth: React.FC<AuthPropsType> = React.memo((props) => {
                 <FormControl>
                     <FormLabel>
                         <p>To log in get registered
-                            <a href={ "https://social-network.samuraijs.com/" }
-                               target={ '_blank' }> here</a>
+                            <a href={ "https://social-network.samuraijs.com/"}> here</a>
                         </p>
                         <p>or use common test account credentials:</p>
                         <p>Email: free@samuraijs.com</p>

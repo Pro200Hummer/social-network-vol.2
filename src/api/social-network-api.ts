@@ -1,7 +1,31 @@
 import axios from 'axios'
 import {UserType} from "../features/Users/users-reducer";
 
-/* Instance with query settings */
+export type UsersResponseType = {
+    items:UserType[]
+    totalCount: number
+    error: null | string
+}
+
+export type MeResponseDataType = {
+    id: number
+    email: string
+    login: string
+}
+
+export type LoginRequestType = {
+    email?: string
+    password?: string
+    rememberMe?: boolean
+    captcha?: string
+}
+
+export type ResponseType<D = {}> = {
+    resultCode: number
+    messages: string[]
+    data: D
+}
+
 export const instance = axios.create({
     baseURL: `https://social-network.samuraijs.com/api/1.0/`,
     withCredentials: true,
@@ -10,7 +34,6 @@ export const instance = axios.create({
     }
 });
 
-/* Objects with requests to the server */
 export const authApi = {
     me(){
         return instance.get<ResponseType<MeResponseDataType>>(`auth/me`)
@@ -42,29 +65,5 @@ export const usersApi = {
 }
 
 
-/* Types */
-export type UsersResponseType = {
-    items:UserType[]
-    totalCount: number
-    error: null | string
-}
 
-export type MeResponseDataType = {
-    id: number
-    email: string
-    login: string
-}
-
-export type LoginRequestType = {
-    email?: string
-    password?: string
-    rememberMe?: boolean
-    captcha?: string
-}
-
-export type ResponseType<D = {}> = {
-    resultCode: number
-    messages: string[]
-    data: D
-}
 

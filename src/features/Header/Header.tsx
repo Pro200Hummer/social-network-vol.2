@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {FC, memo} from 'react'
 import {NavBar} from "../NavBar/NavBar";
 import {AppBar, Button, Grid, LinearProgress, Toolbar, Typography} from "@material-ui/core";
 import {AppStatusType} from "../../app/app-reducer";
@@ -9,7 +9,7 @@ import {useStyles} from "../../utils/styles-util";
 
 
 
-export const Header: React.FC = React.memo(() => {
+export const Header: FC = memo(() => {
 
     const classes = useStyles();
     const preloaderStatus = useSelector<AppRootStateType, AppStatusType>(state => state.app.status)
